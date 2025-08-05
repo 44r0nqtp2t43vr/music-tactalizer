@@ -78,7 +78,7 @@ class BLEService extends GetxController {
     List<int> bytes = data.codeUnits;
     if (_targetCharacteristic != null) {
       await _targetCharacteristic!.write(bytes);
-      debugPrint("✉️ Data sent: $data");
+      // debugPrint("✉️ Data sent: $data");
     }
   }
 
