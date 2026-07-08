@@ -7,6 +7,17 @@ import 'package:mini_music_app/injection_container.dart';
 import 'package:mini_music_app/widgets/audio_player_container.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
+String songToTitle(String songName) {
+  const Map<String, String> songTitleMap = {
+    "rollinginthedeep": "Rolling In The Deep",
+    "shewillbeloved": "She Will Be Loved",
+    "thelessiknowthebetter": "The Less I Know The Better",
+    "umbrella": "Umbrella",
+    "uptownfunk": "Uptown Funk",
+  };
+  return songTitleMap[songName] ?? songName;
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -72,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<ScanResult> results = await FlutterBluePlus.scanResults.first;
     setState(() {
       foundDevices = results.where((r) => r.device.platformName.startsWith("Gloves_BLE")).map((r) => r.device).toSet().toList();
+      // foundDevices = results.map((r) => r.device).toSet().toList();
       isScanning = false;
     });
   }
@@ -122,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.deepPurpleAccent,
       body: Padding(
-        padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
             metadataMap.isEmpty
@@ -140,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
               items: availableSongs.map((song) {
                 return DropdownMenuItem(
                   value: song,
-                  child: Text(song),
+                  child: Text(songToTitle(song)),
                 );
               }).toList(),
               onChanged: (value) {

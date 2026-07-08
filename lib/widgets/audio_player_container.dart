@@ -31,6 +31,9 @@ class AudioPlayerContainerState extends State<AudioPlayerContainer> {
   late final LoggerService _logger;
   Timer? _logTimer;
 
+  // New state variable for the timestamp
+  String _playEventTimestamp = "";
+
   @override
   void initState() {
     super.initState();
@@ -96,6 +99,10 @@ class AudioPlayerContainerState extends State<AudioPlayerContainer> {
       await _audioPlayer.pause();
       _stopLoggingTimer();
     } else {
+      // Capture the precise timestamp when play is initiated
+      final double now = DateTime.now().millisecondsSinceEpoch / 1000.0;
+      _playEventTimestamp = now.toStringAsFixed(6);
+
       await _audioPlayer.play(AssetSource(widget.audioAssetPath));
       _startLoggingTimer();
     }
@@ -137,6 +144,15 @@ class AudioPlayerContainerState extends State<AudioPlayerContainer> {
         const Spacer(),
         Station(data: _lastSentString),
         const Spacer(),
+        // Display the timestamp on the screen
+        if (_playEventTimestamp.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Text(
+              "Play Event: $_playEventTimestamp",
+              style: const TextStyle(fontFamily: 'Courier', fontWeight: FontWeight.bold),
+            ),
+          ),
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
